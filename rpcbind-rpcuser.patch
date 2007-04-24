@@ -1,0 +1,11 @@
+--- rpcbind-0.1.4/src/rpcbind.c~	2004-12-02 17:37:16.000000000 +0100
++++ rpcbind-0.1.4/src/rpcbind.c	2007-04-24 17:02:42.000000000 +0200
+@@ -81,7 +81,7 @@
+ 
+ 
+ /* who to suid to if -s is given */
+-#define RUN_AS  "daemon"
++#define RUN_AS  "rpc"
+ 
+ #define RPCBINDDLOCK "/var/run/rpcbind.lock"
+ 
