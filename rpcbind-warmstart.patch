@@ -1,0 +1,14 @@
+--- rpcbind-0.1.4/src/warmstart.c~	2004-10-25 14:07:42.000000000 +0200
++++ rpcbind-0.1.4/src/warmstart.c	2007-04-24 16:46:58.000000000 +0200
+@@ -54,9 +54,9 @@
+ 
+ 
+ /* These files keep the pmap_list and rpcb_list in XDR format */
+-#define	RPCBFILE	"/tmp/rpcbind.file"
++#define	RPCBFILE	"/var/lib/rpcbind/rpcbind.file"
+ #ifdef PORTMAP
+-#define	PMAPFILE	"/tmp/portmap.file"
++#define	PMAPFILE	"/var/lib/rpcbind/portmap.file"
+ #endif
+ 
+ static bool_t write_struct __P((char *, xdrproc_t, void *));
