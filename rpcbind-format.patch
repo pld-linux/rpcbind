@@ -1,0 +1,11 @@
+--- rpcbind-0.1.4/src/pmap_svc.c~	2005-01-03 14:55:50.000000000 +0100
++++ rpcbind-0.1.4/src/pmap_svc.c	2007-04-24 16:30:54.000000000 +0200
+@@ -314,7 +314,7 @@
+ 			if ((pt2 = strrchr(ua, '.')) != NULL) {
+ 				*pt2 = 0;
+ 				snprintf(serveuaddr, sizeof serveuaddr,
+-			 		"%s.%d.%d", ua,
++			 		"%s.%ld.%ld", ua,
+ 					(fnd->pml_map.pm_port >> 8) & 0xff,
+ 			 		(fnd->pml_map.pm_port) & 0xff);
+ 				*pt2 = '.';
