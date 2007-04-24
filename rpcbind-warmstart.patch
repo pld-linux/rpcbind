@@ -1,6 +1,66 @@
---- rpcbind-0.1.4/src/warmstart.c~	2004-10-25 14:07:42.000000000 +0200
-+++ rpcbind-0.1.4/src/warmstart.c	2007-04-24 16:46:58.000000000 +0200
-@@ -54,9 +54,9 @@
+diff -ur rpcbind-0.1.4/src/rpcbind.c rpcbind-0.1.4-warmstart/src/rpcbind.c
+--- rpcbind-0.1.4/src/rpcbind.c	2007-04-24 17:46:06.000000000 +0200
++++ rpcbind-0.1.4-warmstart/src/rpcbind.c	2007-04-24 17:44:38.000000000 +0200
+@@ -125,6 +125,7 @@
+ 	void *nc_handle;	/* Net config handle */
+ 	struct rlimit rl;
+ 	int maxrec = RPC_MAXDATASIZE;
++	uid_t rpc_uid = 0;
+ 
+ 	parseargs(argc, argv);
+ 
+@@ -187,9 +188,19 @@
+ 	(void) signal(SIGHUP, SIG_IGN);
+ 	(void) signal(SIGUSR1, SIG_IGN);
+ 	(void) signal(SIGUSR2, SIG_IGN);
++
++	if (runasdaemon) {
++		struct passwd *p;
++		if((p = getpwnam(RUN_AS)) == NULL) {
++			syslog(LOG_ERR, "cannot get uid of daemon: %m");
++			exit(1);
++		}
++		rpc_uid = p->pw_uid;
++	}
++
+ #ifdef WARMSTART
+ 	if (warmstart) {
+-		read_warmstart();
++		read_warmstart(rpc_uid);
+ 	}
+ #endif
+ 	if (debugging) {
+@@ -207,13 +218,7 @@
+ 	}
+ 
+ 	if (runasdaemon) {
+-		struct passwd *p;
+-
+-		if((p = getpwnam(RUN_AS)) == NULL) {
+-			syslog(LOG_ERR, "cannot get uid of daemon: %m");
+-			exit(1);
+-		}
+-		if (setuid(p->pw_uid) == -1) {
++		if (setuid(rpc_uid) == -1) {
+ 			syslog(LOG_ERR, "setuid to daemon failed: %m");
+ 			exit(1);
+ 		}
+diff -ur rpcbind-0.1.4/src/rpcbind.h rpcbind-0.1.4-warmstart/src/rpcbind.h
+--- rpcbind-0.1.4/src/rpcbind.h	2004-10-25 14:07:44.000000000 +0200
++++ rpcbind-0.1.4-warmstart/src/rpcbind.h	2007-04-24 17:44:52.000000000 +0200
+@@ -130,7 +130,7 @@
+ #endif
+ 
+ void write_warmstart(void);
+-void read_warmstart(void);
++void read_warmstart(uid_t rpc_uid);
+ 
+ char *addrmerge(struct netbuf *caller, char *serv_uaddr, char *clnt_uaddr, char *netid);
+ void network_init(void);
+diff -ur rpcbind-0.1.4/src/warmstart.c rpcbind-0.1.4-warmstart/src/warmstart.c
+--- rpcbind-0.1.4/src/warmstart.c	2004-10-25 14:07:42.000000000 +0200
++++ rpcbind-0.1.4-warmstart/src/warmstart.c	2007-04-24 17:45:36.000000000 +0200
+@@ -54,13 +54,13 @@
  
  
  /* These files keep the pmap_list and rpcb_list in XDR format */
@@ -12,3 +72,49 @@
  #endif
  
  static bool_t write_struct __P((char *, xdrproc_t, void *));
+-static bool_t read_struct __P((char *, xdrproc_t, void *));
++static bool_t read_struct __P((char *, xdrproc_t, void *, uid_t));
+ 
+ static bool_t
+ write_struct(char *filename, xdrproc_t structproc, void *list)
+@@ -98,7 +98,7 @@
+ }
+ 
+ static bool_t
+-read_struct(char *filename, xdrproc_t structproc, void *list)
++read_struct(char *filename, xdrproc_t structproc, void *list, uid_t rpc_uid)
+ {
+ 	FILE *fp;
+ 	XDR xdrs;
+@@ -109,7 +109,7 @@
+ 		"rpcbind: cannot stat file = %s for reading\n", filename);
+ 		goto error;
+ 	}
+-	if ((sbuf.st_uid != 0) || (sbuf.st_mode & S_IRWXG) ||
++	if ((sbuf.st_uid != rpc_uid) || (sbuf.st_mode & S_IRWXG) ||
+ 	    (sbuf.st_mode & S_IRWXO)) {
+ 		fprintf(stderr,
+ 		"rpcbind: invalid permissions on file = %s for reading\n",
+@@ -148,7 +148,7 @@
+ }
+ 
+ void
+-read_warmstart()
++read_warmstart(uid_t rpc_uid)
+ {
+ 	rpcblist_ptr tmp_rpcbl = NULL;
+ #ifdef PORTMAP
+@@ -156,11 +156,11 @@
+ #endif
+ 	int ok1, ok2 = TRUE;
+ 
+-	ok1 = read_struct(RPCBFILE, (xdrproc_t)xdr_rpcblist_ptr, &tmp_rpcbl);
++	ok1 = read_struct(RPCBFILE, (xdrproc_t)xdr_rpcblist_ptr, &tmp_rpcbl, rpc_uid);
+ 	if (ok1 == FALSE)
+ 		return;
+ 	#ifdef PORTMAP
+-	ok2 = read_struct(PMAPFILE, (xdrproc_t)xdr_pmaplist_ptr, &tmp_pmapl);
++	ok2 = read_struct(PMAPFILE, (xdrproc_t)xdr_pmaplist_ptr, &tmp_pmapl, rpc_uid);
+ 	#endif
+ 	if (ok2 == FALSE) {
+ 		xdr_free((xdrproc_t) xdr_rpcblist_ptr, (char *)&tmp_rpcbl);
