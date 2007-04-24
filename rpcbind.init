@@ -1,0 +1,91 @@
+#!/bin/sh
+#
+# rpcbind	Start/Stop RPC universal addresses to RPC program number mapper
+#
+# chkconfig:	345 11 89
+#
+# description:	The rpcbind utility is a server that converts RPC program \
+#		numbers into universal addresses.  It must be running on \
+#		the host to be able to make RPC calls on a server on that \
+#		machine.
+# processname:	rpcbind
+
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Get service config
+[ -f /etc/sysconfig/rpcbind ] && . /etc/sysconfig/rpcbind
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down rpcbind
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+start() {
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/rpcbind ]; then
+		is_no "${RPCBIND_RPCUSER}" || RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -s"
+		is_no "${RPCBIND_VERBOSE}" || RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -l"
+		is_yes "${RPCBIND_INSECURE}" && RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -i"
+		[ -z "${RPCBIND_ADDRESSES}" ] || \
+			for a in $RPCBIND_ADDRESSES ; do
+				RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -h $a"
+			done
+		msg_starting rpcbind
+		daemon rpcbind ${RPCBIND_OPTIONS}
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/rpcbind
+	else
+		msg_already_running rpcbind
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/rpcbind ]; then
+		msg_stopping rpcbind
+		killproc rpcbind
+		rm -f /var/lock/subsys/rpcbind
+	else
+		msg_not_running rpcbind
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	RPCBIND_OPTIONS=
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  cleanup)
+	stop
+	RPCBIND_OPTIONS=
+	start
+	;;
+  restart|force-reload)
+	stop
+	RPCBIND_OPTIONS="-w"
+	start
+	;;
+  status)
+	status rpcbind
+	exit $?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|force-reload|cleanup|status}"
+	exit 3
+esac
+
+exit $RETVAL

@@ -1,0 +1,14 @@
+# Set nice level for rpcbind
+SERVICE_RUN_NICE_LEVEL="+1"
+
+# Cause rpcbind to change to the user rpc as soon as possible
+RPCBIND_RPCUSER="yes"
+
+# Turn on libwrap connection logging
+RPCBIND_VERBOSE="yes"
+
+# "Insecure" mode.  Allow calls to SET and UNSET from any host
+RPCBIND_INSECURE="no"
+
+# Specify specific IP addresses to bind to for UDP requests
+#RPCBIND_ADDRESSES="10.1.0.1"
