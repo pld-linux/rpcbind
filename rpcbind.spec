@@ -1,7 +1,7 @@
 Summary:	Universal addresses to RPC program number mapper
 Name:		rpcbind
 Version:	0.1.4
-Release:	0.8
+Release:	1
 License:	GPL
 Group:		Daemons
 Source0:	http://nfsv4.bullopensource.org/tarballs/rpcbind/%{name}-%{version}.tar.bz2
