@@ -1,7 +1,7 @@
 Summary:	Universal addresses to RPC program number mapper
 Name:		rpcbind
 Version:	0.1.4
-Release:	1
+Release:	2
 License:	GPL
 Group:		Daemons
 Source0:	http://nfsv4.bullopensource.org/tarballs/rpcbind/%{name}-%{version}.tar.bz2
@@ -26,6 +26,10 @@ Requires:	/sbin/chkconfig
 Requires:	rc-scripts >= 0.4.1.6
 Provides:	portmap
 Provides:	user(rpc)
+Conflicts:	nfs-utils < 1.1.0-0.rc2.1
+Conflicts:	quota-rquotad < 1:3.14-4
+Conflicts:	flixengine < 8.0.8.2-1
+Conflicts:	clusternfs < 3.0-0.rc2.3
 Obsoletes:	portmap
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
