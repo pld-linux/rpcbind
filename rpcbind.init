@@ -33,7 +33,6 @@ fi
 start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/rpcbind ]; then
-		is_no "${RPCBIND_RPCUSER}" || RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -s"
 		is_no "${RPCBIND_VERBOSE}" || RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -l"
 		is_yes "${RPCBIND_INSECURE}" && RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -i"
 		[ -z "${RPCBIND_ADDRESSES}" ] || \

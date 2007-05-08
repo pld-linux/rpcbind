@@ -1,9 +1,6 @@
 # Set nice level for rpcbind
 SERVICE_RUN_NICE_LEVEL="+1"
 
-# Cause rpcbind to change to the user rpc as soon as possible
-RPCBIND_RPCUSER="yes"
-
 # Turn on libwrap connection logging
 RPCBIND_VERBOSE="yes"
 
