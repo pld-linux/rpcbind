@@ -1,17 +1,20 @@
 Summary:	Universal addresses to RPC program number mapper
 Name:		rpcbind
 Version:	0.1.4
-Release:	0.4
+Release:	0.8
 License:	GPL
 Group:		Daemons
 Source0:	http://nfsv4.bullopensource.org/tarballs/rpcbind/%{name}-%{version}.tar.bz2
 # Source0-md5:	280539aa1f8975b1318690cd903f858a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch0:		%{name}-build.patch
-Patch1:		%{name}-format.patch
-Patch2:		%{name}-warmstart.patch
-Patch3:		%{name}-rpcuser.patch
+Patch0:		%{name}-format.patch
+Patch1:		%{name}-make-man.patch
+Patch2:		%{name}-debug.patch
+Patch3:		%{name}-warmstart.patch
+Patch4:		%{name}-rpcuser.patch
+Patch5:		%{name}-libwrap.patch
+Patch6:		%{name}-syslog.patch
 URL:		http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -37,14 +40,21 @@ RPC calls on a server on that machine.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 %{__aclocal}
-%{__autoconf}
 %{__autoheader}
+%{__autoconf}
 %{__automake}
 cp -f /usr/share/automake/config.sub .
-%configure
+%configure \
+	--enable-libwrap \
+	--enable-warmstarts \
+	--with-statedir=/var/lib/rpcbind \
+	--with-rpcuser=rpc
 %{__make}
 
 %install
