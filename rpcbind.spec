@@ -23,7 +23,7 @@ BuildRequires:	libwrap-devel
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires(post,preun):	/sbin/chkconfig
 Requires:	/sbin/chkconfig
-Requires:	rc-scripts
+Requires:	rc-scripts >= 0.4.1.6
 Provides:	portmap
 Provides:	user(rpc)
 Obsoletes:	portmap
