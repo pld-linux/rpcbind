@@ -1,0 +1,28 @@
+diff --git a/Makefile.am b/Makefile.am
+index 54d0a92..cd56148 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,2 +1,2 @@
+-SUBDIRS= src
++SUBDIRS= src man
+ 
+diff --git a/configure.in b/configure.in
+index a158927..0298c80 100644
+--- a/configure.in
++++ b/configure.in
+@@ -20,6 +20,6 @@ AC_CHECK_HEADERS([arpa/inet.h fcntl.h netdb.h \
+ AC_CHECK_LIB([pthread], [pthread_create])
+ AC_CHECK_LIB([tirpc], [clnt_create])
+ 
+-AC_CONFIG_FILES([Makefile src/Makefile])
++AC_CONFIG_FILES([Makefile src/Makefile man/Makefile])
+ AC_OUTPUT()
+                                                                    
+diff --git a/man/Makefile.am b/man/Makefile.am
+new file mode 100644
+index 0000000..84818e9
+--- /dev/null
++++ b/man/Makefile.am
+@@ -0,0 +1,2 @@
++man8_MANS   = rpcbind.8
++EXTRA_DIST  = $(man8_MANS)
