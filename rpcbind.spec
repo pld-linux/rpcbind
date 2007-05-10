@@ -1,4 +1,5 @@
 Summary:	Universal addresses to RPC program number mapper
+Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
 Version:	0.1.4
 Release:	2
@@ -26,17 +27,22 @@ Requires:	/sbin/chkconfig
 Requires:	rc-scripts >= 0.4.1.6
 Provides:	portmap
 Provides:	user(rpc)
+Obsoletes:	portmap
+Conflicts:	clusternfs < 3.0-0.rc2.3
+Conflicts:	flixengine < 8.0.8.2-1
 Conflicts:	nfs-utils < 1.1.0-0.rc2.1
 Conflicts:	quota-rquotad < 1:3.14-4
-Conflicts:	flixengine < 8.0.8.2-1
-Conflicts:	clusternfs < 3.0-0.rc2.3
-Obsoletes:	portmap
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 The rpcbind utility is a server that converts RPC program numbers into
-universal addresses.  It must be running on the host to be able to make
+universal addresses. It must be running on the host to be able to make
 RPC calls on a server on that machine.
+
+%description -l pl.UTF-8
+Narzędzie rpcbind to serwer konwertujący numery programów RPC na
+adresy uniwersalne. Musi działać na maszynie, aby można było wykonywać
+wywołania RPC na serwerze na tej maszynie.
 
 %prep
 %setup -q
@@ -53,7 +59,6 @@ RPC calls on a server on that machine.
 %{__autoheader}
 %{__autoconf}
 %{__automake}
-cp -f /usr/share/automake/config.sub .
 %configure \
 	--enable-libwrap \
 	--enable-warmstarts \
