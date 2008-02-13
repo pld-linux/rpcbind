@@ -1,4 +1,7 @@
+#
+# Conditional build:
 %bcond_with	ipv6	# broken, rpcinfo tries for example to create v6 socket on v4-only host
+#
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
