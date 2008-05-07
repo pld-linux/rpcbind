@@ -1,27 +1,23 @@
 #
-# Conditional build:
-%bcond_with	ipv6	# broken, rpcinfo tries for example to create v6 socket on v4-only host
-#
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
-Version:	0.1.4
-Release:	4
+Version:	0.1.5
+Release:	0.1
 License:	GPL
 Group:		Daemons
-Source0:	http://nfsv4.bullopensource.org/tarballs/rpcbind/%{name}-%{version}.tar.bz2
-# Source0-md5:	280539aa1f8975b1318690cd903f858a
+Source0:	http://dl.sourceforge.net/sourceforge/rpcbind/%{name}-%{version}.tar.bz2
+# Source0-md5:	adcf17feb72d942f38f91a9a90205a74
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch0:		%{name}-format.patch
-Patch1:		%{name}-make-man.patch
 Patch2:		%{name}-debug.patch
 Patch3:		%{name}-warmstart.patch
 Patch4:		%{name}-rpcuser.patch
 Patch5:		%{name}-libwrap.patch
 Patch6:		%{name}-syslog.patch
 Patch7:		%{name}-iff_up.patch
-URL:		http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
+# http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
+URL:		http://sourceforge.net/projects/rpcbind/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtirpc-devel
@@ -51,16 +47,12 @@ wywołania RPC na serwerze na tej maszynie.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+#%patch2 -p1
+#%patch3 -p1
+#%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-
-%{!?with_ipv6:sed -i -e 's#-DINET6##g' Makefile*}
 
 %build
 %{__aclocal}
