@@ -21,6 +21,7 @@ URL:		http://sourceforge.net/projects/rpcbind/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtirpc-devel
+BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires(post,preun):	/sbin/chkconfig
@@ -55,6 +56,7 @@ wywołania RPC na serwerze na tej maszynie.
 %patch7 -p1
 
 %build
+%{__libtoolize}
 %{__aclocal}
 %{__autoheader}
 %{__autoconf}
