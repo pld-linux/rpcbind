@@ -1,11 +1,9 @@
 --- rpcbind-0.1.4/src/Makefile.am~	2007-05-08 15:43:10.000000000 +0200
 +++ rpcbind-0.1.4/src/Makefile.am	2007-05-08 15:44:52.000000000 +0200
-@@ -30,7 +30,7 @@
+@@ -30,5 +30,5 @@
  rpcbind_LDFLAGS = -lpthread -ltirpc $(WRAPLIB)
  rpcbind_LDADD = $(LIB_TIRPC)
  AM_CPPFLAGS = -I/usr/include/tirpc -DCHECK_LOCAL -DPORTMAP \
 -                       -DFACILITY=LOG_MAIL -DSEVERITY=LOG_INFO
 +                       -DFACILITY=LOG_AUTH -DSEVERITY=LOG_INFO
- 
- $(rpcbind_OBJECTS) :    security.o util.o check_bound.o pmap_svc.o \
-                         rpcb_svc.o rpcb_svc_com.o rpcb_svc_4.o \
+      
