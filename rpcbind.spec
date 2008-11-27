@@ -2,25 +2,21 @@
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
-Version:	0.1.5
-Release:	0.1
+Version:	0.1.7
+Release:	1
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/sourceforge/rpcbind/%{name}-%{version}.tar.bz2
-# Source0-md5:	adcf17feb72d942f38f91a9a90205a74
+# Source0-md5:	44cbcc67eb35370886c8ac0d49600741
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch2:		%{name}-debug.patch
-Patch3:		%{name}-warmstart.patch
-Patch4:		%{name}-rpcuser.patch
-Patch5:		%{name}-libwrap.patch
-Patch6:		%{name}-syslog.patch
-Patch7:		%{name}-iff_up.patch
+Patch0:		%{name}-libwrap.patch
+Patch1:		%{name}-syslog.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libtirpc-devel
+BuildRequires:	libtirpc-devel >= 1:0.1.10
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -48,12 +44,8 @@ wywołania RPC na serwerze na tej maszynie.
 
 %prep
 %setup -q
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+%patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
