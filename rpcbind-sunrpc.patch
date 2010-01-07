@@ -1,0 +1,11 @@
+--- rpcbind-0.1.7/src/rpcbind.c.orig	2008-11-19 14:17:34.000000000 +0100
++++ rpcbind-0.1.7/src/rpcbind.c	2010-01-07 13:03:37.416632894 +0100
+@@ -114,7 +114,7 @@
+ char *udp_uaddr;	/* Universal UDP address */
+ char *tcp_uaddr;	/* Universal TCP address */
+ #endif
+-static char servname[] = "rpcbind";
++static char servname[] = "sunrpc";
+ static char superuser[] = "superuser";
+ 
+ int main __P((int, char *[]));
