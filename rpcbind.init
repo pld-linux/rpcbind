@@ -33,14 +33,8 @@ fi
 start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/rpcbind ]; then
-		is_no "${RPCBIND_VERBOSE}" || RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -l"
-		is_yes "${RPCBIND_INSECURE}" && RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -i"
-		[ -z "${RPCBIND_ADDRESSES}" ] || \
-			for a in $RPCBIND_ADDRESSES ; do
-				RPCBIND_OPTIONS="${RPCBIND_OPTIONS} -h $a"
-			done
 		msg_starting rpcbind
-		daemon rpcbind ${RPCBIND_OPTIONS}
+		daemon rpcbind -w $RPCBIND_OPTIONS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/rpcbind
 	else
@@ -62,7 +56,6 @@ RETVAL=0
 # See how we were called.
 case "$1" in
   start)
-	RPCBIND_OPTIONS=
   	start
 	;;
   stop)
@@ -70,12 +63,10 @@ case "$1" in
 	;;
   cleanup)
 	stop
-	RPCBIND_OPTIONS=
 	start
 	;;
   restart|force-reload)
 	stop
-	RPCBIND_OPTIONS="-w"
 	start
 	;;
   status)

@@ -5,7 +5,8 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-ExecStart=/sbin/rpcbind -w
+EnvironmentFile=-/etc/sysconfig/rpcbind
+ExecStart=/sbin/rpcbind -w $RPCBIND_OPTIONS
 
 [Install]
 WantedBy=multi-user.target
