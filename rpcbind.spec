@@ -2,7 +2,7 @@ Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
 Version:	0.2.0
-Release:	4
+Release:	5
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
@@ -29,6 +29,7 @@ BuildRequires:	rpmbuild(macros) >= 1.623
 Requires(post,preun):	/sbin/chkconfig
 Requires:	/sbin/chkconfig
 Requires:	rc-scripts >= 0.4.1.6
+Requires:	systemd-units >= 0.38
 Provides:	portmap = 8.0
 Provides:	user(rpc)
 Obsoletes:	portmap
@@ -47,20 +48,6 @@ RPC calls on a server on that machine.
 Narzędzie rpcbind to serwer konwertujący numery programów RPC na
 adresy uniwersalne. Musi działać na maszynie, aby można było wykonywać
 wywołania RPC na serwerze na tej maszynie.
-
-%package systemd
-Summary:	systemd units for rpcbind
-Summary(pl.UTF-8):	Jednostki systemd dla demona rpcbind
-Group:		Daemons
-Requires:	%{name} = %{version}-%{release}
-Requires:	systemd
-Requires:	systemd-units
-
-%description systemd
-systemd units for rpcbind.
-
-%description systemd -l pl.UTF-8
-Jednostki systemd dla demona rpcbind.
 
 %prep
 %setup -q
@@ -110,28 +97,22 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add rpcbind
 %service rpcbind restart
+%systemd_post rpcbind.service
 
 %postun
 if [ "$1" = "0" ]; then
 	%userremove rpc
 fi
+%systemd_reload
 
 %preun
 if [ "$1" = "0" ]; then
 	%service -q rpcbind stop
 	/sbin/chkconfig --del rpcbind
 fi
-
-%post systemd
-%systemd_post rpcbind.service
-
-%preun systemd
 %systemd_preun rpcbind.service
 
-%postun systemd
-%systemd_reload
-
-%triggerpostun -- %{name} < 0.2.0-4
+%triggerpostun -- %{name} < 0.2.0-5
 if [ -f /etc/sysconfig/rpcbind ]; then
 	. /etc/sysconfig/rpcbind
 	[ "$RPCBIND_VERBOSE" == "no" ] || RPCBIND_OPTIONS="-l"
@@ -145,6 +126,7 @@ if [ -f /etc/sysconfig/rpcbind ]; then
 	echo "# Added by rpm trigger" >>/etc/sysconfig/rpcbind
 	echo "RPCBIND_OPTIONS=\"$RPCBIND_OPTIONS\"" >> /etc/sysconfig/rpcbind
 fi
+%systemd_trigger rpcbind.service
 
 %files
 %defattr(644,root,root,755)
@@ -155,8 +137,5 @@ fi
 %attr(755,root,root) %{_sbindir}/*
 %{_mandir}/man8/*.8*
 %dir %attr(700,rpc,root) %{_var}/lib/%{name}
-
-%files systemd
-%defattr(644,root,root,755)
 %{systemdunitdir}/rpcbind.service
 %{systemdunitdir}/rpcbind.socket
