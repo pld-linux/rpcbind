@@ -2,7 +2,7 @@ Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
 Version:	0.2.0
-Release:	5
+Release:	6
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
@@ -33,6 +33,7 @@ Requires:	systemd-units >= 0.38
 Provides:	portmap = 8.0
 Provides:	user(rpc)
 Obsoletes:	portmap
+Obsoletes:	rpcbind-systemd
 Conflicts:	clusternfs < 3.0-0.rc2.3
 Conflicts:	flixengine < 8.0.8.2-1
 Conflicts:	nfs-utils < 1.1.0-0.rc2.1
