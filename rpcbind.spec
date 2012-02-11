@@ -2,7 +2,7 @@ Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
 Version:	0.2.0
-Release:	6
+Release:	7
 License:	GPL
 Group:		Daemons
 Source0:	http://dl.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
@@ -122,7 +122,7 @@ if [ -f /etc/sysconfig/rpcbind ]; then
 		RPCBIND_OPTIONS="$RPCBIND_OPTIONS -h $a"
 	done
 	[ -z "$RPCBIND_OPTIONS" ] && exit 0
-	cp -f /etc/sysconfig/rpcbind /etc/sysconfig/rpcbind.rpmsave
+	%{__cp} -f /etc/sysconfig/rpcbind /etc/sysconfig/rpcbind.rpmsave
 	echo >>/etc/sysconfig/rpcbind
 	echo "# Added by rpm trigger" >>/etc/sysconfig/rpcbind
 	echo "RPCBIND_OPTIONS=\"$RPCBIND_OPTIONS\"" >> /etc/sysconfig/rpcbind
