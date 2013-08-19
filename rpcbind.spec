@@ -1,12 +1,12 @@
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
-Version:	0.2.0
-Release:	8
+Version:	0.2.1
+Release:	1
 License:	GPL
 Group:		Daemons
-Source0:	http://dl.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
-# Source0-md5:	1a77ddb1aaea8099ab19c351eeb26316
+Source0:	http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
+# Source0-md5:	0a5f9c2142af814c55d957aaab3bcc68
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	%{name}.service
@@ -14,9 +14,6 @@ Source4:	%{name}.socket
 Patch0:		%{name}-libwrap.patch
 Patch1:		%{name}-syslog.patch
 Patch2:		%{name}-sunrpc.patch
-Patch3:		%{name}-usage.patch
-Patch4:		%{name}-SO_REUSEADDR.patch
-Patch5:		%{name}-nofork.patch
 Patch6:		%{name}-tcp-addrs.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
@@ -56,15 +53,11 @@ wywołania RPC na serwerze na tej maszynie.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
 %patch6 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal}
-%{__autoheader}
 %{__autoconf}
 %{__automake}
 %configure \
@@ -79,8 +72,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/sbin,%{_sbindir},/etc/{sysconfig,rc.d/init.d}} \
 	$RPM_BUILD_ROOT{%{_mandir}/man8,%{_var}/lib/%{name},%{systemdunitdir}}
 
-install src/rpcbind $RPM_BUILD_ROOT/sbin
-install src/rpcinfo $RPM_BUILD_ROOT%{_sbindir}
+install rpcbind $RPM_BUILD_ROOT/sbin
+install rpcinfo $RPM_BUILD_ROOT%{_sbindir}
 
 install man/{rpcbind,rpcinfo}.8 $RPM_BUILD_ROOT%{_mandir}/man8
 

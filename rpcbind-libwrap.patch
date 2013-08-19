@@ -1,19 +1,19 @@
---- a/src/Makefile.am
-+++ b/src/Makefile.am
+--- a/Makefile.am
++++ b/Makefile.am
 @@ -9,6 +9,7 @@
  
  if LIBWRAP
- INCLUDES +=	-DLIBWRAP
+ AM_CPPFLAGS +=	-DLIBWRAP
 +WRAPLIB =	-lwrap
  endif
  
  bin_PROGRAMS = rpcbind rpcinfo
 @@ -24,7 +28,7 @@
- rpcinfo_LDADD   =       $(LIB_TIRPC)
+ 	src/security.c \
+ 	src/util.c \
+ 	src/warmstart.c
+-rpcbind_LDADD = $(TIRPC_LIBS)
++rpcbind_LDADD = $(TIRPC_LIBS) $(WRAPLIB)
  
- 
--rpcbind_LDFLAGS = -lpthread -ltirpc
-+rpcbind_LDFLAGS = -lpthread -ltirpc $(WRAPLIB)
- rpcbind_LDADD = $(LIB_TIRPC)
- AM_CPPFLAGS = -I/usr/include/tirpc -DCHECK_LOCAL -DPORTMAP \
-                        -DFACILITY=LOG_MAIL -DSEVERITY=LOG_INFO
+ rpcinfo_SOURCES =       src/rpcinfo.c
+ rpcinfo_LDADD   =       $(TIRPC_LIBS)
