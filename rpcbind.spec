@@ -3,7 +3,7 @@ Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów 
 Name:		rpcbind
 Version:	0.2.1
 Release:	1
-License:	GPL
+License:	BSD
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
 # Source0-md5:	0a5f9c2142af814c55d957aaab3bcc68
@@ -17,11 +17,12 @@ Patch2:		%{name}-sunrpc.patch
 Patch6:		%{name}-tcp-addrs.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	libtirpc-devel >= 1:0.1.10
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
+BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.623
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
@@ -125,12 +126,13 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README
+%doc AUTHORS COPYING ChangeLog NEWS README
 %attr(754,root,root) /etc/rc.d/init.d/rpcbind
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/rpcbind
-%attr(755,root,root) /sbin/*
-%attr(755,root,root) %{_sbindir}/*
-%{_mandir}/man8/*.8*
+%attr(755,root,root) /sbin/rpcbind
+%attr(755,root,root) %{_sbindir}/rpcinfo
+%{_mandir}/man8/rpcbind.8*
+%{_mandir}/man8/rpcinfo.8*
 %dir %attr(700,rpc,root) %{_var}/lib/%{name}
 %{systemdunitdir}/rpcbind.service
 %{systemdunitdir}/rpcbind.socket
