@@ -2,7 +2,7 @@ Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
 Version:	0.2.1
-Release:	1
+Release:	2
 License:	BSD
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
@@ -14,6 +14,7 @@ Source4:	%{name}.socket
 Patch0:		%{name}-libwrap.patch
 Patch1:		%{name}-syslog.patch
 Patch2:		%{name}-sunrpc.patch
+Patch3:		%{name}-nss.h.patch
 Patch6:		%{name}-tcp-addrs.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
@@ -54,6 +55,7 @@ wywołania RPC na serwerze na tej maszynie.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 %patch6 -p1
 
 %build

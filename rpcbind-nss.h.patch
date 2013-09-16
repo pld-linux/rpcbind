@@ -1,0 +1,14 @@
+--- rpcbind-0.2.1/src/rpcbind.c~	2013-09-16 14:22:37.567231241 +0200
++++ rpcbind-0.2.1/src/rpcbind.c	2013-09-16 14:31:27.464077535 +0200
+@@ -67,11 +67,7 @@
+ #include <pwd.h>
+ #include <string.h>
+ #include <errno.h>
+-#ifdef HAVE_NSS_H
+ #include <nss.h>
+-#else
+-static inline void __nss_configure_lookup(const char *db, const char *s) {}
+-#endif
+ #include "rpcbind.h"
+ 
+ /*#define RPCBIND_DEBUG*/
