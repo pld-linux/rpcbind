@@ -32,24 +32,26 @@ fi
 
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/rpcbind ]; then
-		msg_starting rpcbind
-		daemon /sbin/rpcbind -w $RPCBIND_OPTIONS
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/rpcbind
-	else
+	if [ -f /var/lock/subsys/rpcbind ]; then
 		msg_already_running rpcbind
+		return
 	fi
+
+	msg_starting rpcbind
+	daemon /sbin/rpcbind -w $RPCBIND_OPTIONS
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/rpcbind
 }
 
 stop() {
-	if [ -f /var/lock/subsys/rpcbind ]; then
-		msg_stopping rpcbind
-		killproc rpcbind
-		rm -f /var/lock/subsys/rpcbind
-	else
+	if [ ! -f /var/lock/subsys/rpcbind ]; then
 		msg_not_running rpcbind
+		return
 	fi
+
+	msg_stopping rpcbind
+	killproc rpcbind
+	rm -f /var/lock/subsys/rpcbind
 }
 
 RETVAL=0
