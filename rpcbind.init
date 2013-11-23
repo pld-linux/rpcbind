@@ -34,7 +34,7 @@ start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/rpcbind ]; then
 		msg_starting rpcbind
-		daemon rpcbind -w $RPCBIND_OPTIONS
+		daemon /sbin/rpcbind -w $RPCBIND_OPTIONS
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/rpcbind
 	else
