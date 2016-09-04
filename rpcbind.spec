@@ -25,6 +25,7 @@ BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.623
+BuildRequires:	systemd-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	/sbin/chkconfig
@@ -56,7 +57,7 @@ wywołania RPC na serwerze na tej maszynie.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-#%patch6 -p1
+%patch6 -p1
 
 %build
 %{__libtoolize}
@@ -67,7 +68,8 @@ wywołania RPC na serwerze na tej maszynie.
 	--enable-libwrap \
 	--enable-warmstarts \
 	--with-statedir=/var/lib/rpcbind \
-	--with-rpcuser=rpc
+	--with-rpcuser=rpc \
+	--with-systemdsystemunitdir=%{%systemdunitdir}
 %{__make}
 
 %install
