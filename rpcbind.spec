@@ -16,11 +16,12 @@ Patch1:		%{name}-syslog.patch
 Patch2:		%{name}-sunrpc.patch
 Patch3:		%{name}-nss.h.patch
 Patch6:		%{name}-tcp-addrs.patch
+Patch100:	%{name}-0.2.4-rc1.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
-BuildRequires:	libtirpc-devel >= 1:0.1.10
+BuildRequires:	libtirpc-devel >= 1:1.0.1
 BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 BuildRequires:	pkgconfig
@@ -53,6 +54,7 @@ wywołania RPC na serwerze na tej maszynie.
 
 %prep
 %setup -q
+%patch100 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
