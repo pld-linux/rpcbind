@@ -9,11 +9,11 @@
  
  bin_PROGRAMS = rpcbind rpcinfo
 @@ -24,7 +28,7 @@
- 	src/security.c \
  	src/util.c \
- 	src/warmstart.c
+ 	src/warmstart.c \
+ 	src/xlog.c
 -rpcbind_LDADD = $(TIRPC_LIBS)
 +rpcbind_LDADD = $(TIRPC_LIBS) $(WRAPLIB)
  
- rpcinfo_SOURCES =       src/rpcinfo.c
- rpcinfo_LDADD   =       $(TIRPC_LIBS)
+ if SYSTEMD
+ AM_CPPFLAGS += $(SYSTEMD_CFLAGS) -DSYSTEMD
