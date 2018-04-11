@@ -9,12 +9,11 @@ Source0:	http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
 # Source0-md5:	cf10cd41ed8228fc54c316191c1f07fe
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Source3:	%{name}.service
-Source4:	%{name}.socket
 Patch0:		%{name}-libwrap.patch
 Patch1:		%{name}-syslog.patch
 Patch2:		%{name}-sunrpc.patch
 Patch3:		%{name}-nss.h.patch
+Patch4:		%{name}-systemd.patch
 Patch6:		%{name}-tcp-addrs.patch
 # http://nfsv4.bullopensource.org/doc/tirpc_rpcbind.php
 URL:		http://sourceforge.net/projects/rpcbind/
@@ -57,6 +56,7 @@ wywołania RPC na serwerze na tej maszynie.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 %patch6 -p1
 
 %build
@@ -65,28 +65,25 @@ wywołania RPC na serwerze na tej maszynie.
 %{__autoconf}
 %{__automake}
 %configure \
+	--bindir=/sbin \
 	--enable-libwrap \
 	--enable-warmstarts \
 	--with-statedir=/var/lib/rpcbind \
 	--with-rpcuser=rpc \
-	--with-systemdsystemunitdir=%{%systemdunitdir}
+	--with-systemdsystemunitdir=%{systemdunitdir}
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/sbin,%{_sbindir},/etc/{sysconfig,rc.d/init.d}} \
-	$RPM_BUILD_ROOT{%{_mandir}/man8,%{_var}/lib/%{name},%{systemdunitdir}}
+install -d $RPM_BUILD_ROOT{/sbin,%{_sbindir},/etc/{sysconfig,rc.d/init.d},/var/lib/rpcbind}
 
-install rpcbind $RPM_BUILD_ROOT/sbin
-install rpcinfo $RPM_BUILD_ROOT%{_sbindir}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
-install man/{rpcbind,rpcinfo}.8 $RPM_BUILD_ROOT%{_mandir}/man8
+%{__mv} $RPM_BUILD_ROOT/sbin/rpcinfo $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/rpcbind
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/rpcbind
-
-install %{SOURCE3} $RPM_BUILD_ROOT%{systemdunitdir}/rpcbind.service
-install %{SOURCE4} $RPM_BUILD_ROOT%{systemdunitdir}/rpcbind.socket
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,8 +112,8 @@ fi
 %triggerpostun -- %{name} < 0.2.0-5
 if [ -f /etc/sysconfig/rpcbind ]; then
 	. /etc/sysconfig/rpcbind
-	[ "$RPCBIND_VERBOSE" == "no" ] || RPCBIND_OPTIONS="-l"
-	[ "$RPCBIND_INSECURE" == "yes" ] && RPCBIND_OPTIONS="$RPCBIND_OPTIONS -i"
+	[ "$RPCBIND_VERBOSE" = "no" ] || RPCBIND_OPTIONS="-l"
+	[ "$RPCBIND_INSECURE" = "yes" ] && RPCBIND_OPTIONS="$RPCBIND_OPTIONS -i"
 	for a in $RPCBIND_ADDRESSES ; do
 		RPCBIND_OPTIONS="$RPCBIND_OPTIONS -h $a"
 	done

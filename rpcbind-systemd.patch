@@ -1,0 +1,29 @@
+--- rpcbind-0.2.4/systemd/rpcbind.service.in.orig	2016-11-28 21:47:28.000000000 +0100
++++ rpcbind-0.2.4/systemd/rpcbind.service.in	2018-04-11 19:41:46.466605338 +0200
+@@ -6,12 +6,13 @@
+ # Make sure we use the IP addresses listed for
+ # rpcbind.socket, no matter how this unit is started.
+ Wants=rpcbind.socket
+-After=rpcbind.socket
++After=rpcbind.socket syslog.target network.target
+ 
+ [Service]
+ Type=notify
+-# distro can provide a drop-in adding EnvironmentFile=-/??? if needed.
++EnvironmentFile=-/etc/sysconfig/rpcbind
+ ExecStart=@_bindir@/rpcbind $RPCBIND_OPTIONS -w -f
+ 
+ [Install]
+ WantedBy=multi-user.target
++Also=rpcbind.socket
+--- rpcbind-0.2.4/systemd/rpcbind.socket.orig	2016-11-28 21:47:28.000000000 +0100
++++ rpcbind-0.2.4/systemd/rpcbind.socket	2018-04-11 19:43:27.366604185 +0200
+@@ -5,7 +5,7 @@
+ Before=rpcbind.target
+ 
+ [Socket]
+-ListenStream=/run/rpcbind.sock
++ListenStream=/var/run/rpcbind.sock
+ 
+ # RPC netconfig can't handle ipv6/ipv4 dual sockets
+ BindIPv6Only=ipv6-only
