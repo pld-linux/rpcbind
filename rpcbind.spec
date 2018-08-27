@@ -1,12 +1,16 @@
+#
+# Conditional build:
+%bcond_with	rmtcalls	# Remote Calls
+
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
-Version:	0.2.4
+Version:	1.2.5
 Release:	1
 License:	BSD
 Group:		Daemons
 Source0:	http://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
-# Source0-md5:	cf10cd41ed8228fc54c316191c1f07fe
+# Source0-md5:	ed46f09b9c0fa2d49015f6431bc5ea7b
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-libwrap.patch
@@ -65,8 +69,10 @@ wywołania RPC na serwerze na tej maszynie.
 %{__autoconf}
 %{__automake}
 %configure \
-	--bindir=/sbin \
+	--sbindir=/sbin \
+	--bindir=%{_sbindir} \
 	--enable-libwrap \
+	%{?with_rmtcalls:--enable-rmtcalls} \
 	--enable-warmstarts \
 	--with-statedir=/var/lib/rpcbind \
 	--with-rpcuser=rpc \
@@ -79,8 +85,6 @@ install -d $RPM_BUILD_ROOT{/sbin,%{_sbindir},/etc/{sysconfig,rc.d/init.d},/var/l
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-%{__mv} $RPM_BUILD_ROOT/sbin/rpcinfo $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/rpcbind
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/rpcbind
