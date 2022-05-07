@@ -1,6 +1,6 @@
---- rpcbind-0.1.4/Makefile.am~	2007-05-08 15:43:10.000000000 +0200
-+++ rpcbind-0.1.4/Makefile.am	2007-05-08 15:44:52.000000000 +0200
-@@ -1,6 +1,6 @@
+--- rpcbind-1.2.6/Makefile.am.orig	2022-05-07 20:57:41.029850068 +0200
++++ rpcbind-1.2.6/Makefile.am	2022-05-07 20:58:03.886392910 +0200
+@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
  AM_CPPFLAGS = \
  	-DCHECK_LOCAL \
  	-DPORTMAP \

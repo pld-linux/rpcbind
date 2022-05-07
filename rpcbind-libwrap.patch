@@ -1,14 +1,14 @@
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -9,6 +9,7 @@
+--- rpcbind-1.2.6/Makefile.am.orig	2021-05-10 19:10:19.000000000 +0200
++++ rpcbind-1.2.6/Makefile.am	2022-05-07 20:57:22.589949965 +0200
+@@ -27,6 +27,7 @@ endif
  
  if LIBWRAP
  AM_CPPFLAGS +=	-DLIBWRAP
 +WRAPLIB =	-lwrap
  endif
  
- bin_PROGRAMS = rpcbind rpcinfo
-@@ -24,7 +28,7 @@
+ if RMTCALLS
+@@ -49,7 +50,7 @@ rpcbind_SOURCES = \
  	src/util.c \
  	src/warmstart.c \
  	src/xlog.c
