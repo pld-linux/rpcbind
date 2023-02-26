@@ -17,7 +17,7 @@
 +Also=rpcbind.socket
 --- rpcbind-0.2.4/systemd/rpcbind.socket.orig	2016-11-28 21:47:28.000000000 +0100
 +++ rpcbind-0.2.4/systemd/rpcbind.socket	2018-04-11 19:43:27.366604185 +0200
-@@ -5,7 +5,7 @@
+@@ -5,14 +5,14 @@
  Before=rpcbind.target
  
  [Socket]
@@ -25,4 +25,16 @@
 +ListenStream=/var/run/rpcbind.sock
  
  # RPC netconfig can't handle ipv6/ipv4 dual sockets
- BindIPv6Only=ipv6-only
+-BindIPv6Only=ipv6-only
+-ListenStream=0.0.0.0:111
+-ListenDatagram=0.0.0.0:111
+-ListenStream=[::]:111
+-ListenDatagram=[::]:111
++#BindIPv6Only=ipv6-only
++#ListenStream=0.0.0.0:111
++#ListenDatagram=0.0.0.0:111
++#ListenStream=[::]:111
++#ListenDatagram=[::]:111
+ 
+ [Install]
+ WantedBy=sockets.target
