@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	rmtcalls	# Remote Calls
+%bcond_without	systemd		# systemd
 
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
@@ -28,7 +29,7 @@ BuildRequires:	libtool
 BuildRequires:	libwrap-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.623
-BuildRequires:	systemd-devel
+%{?with_systemd:BuildRequires:	systemd-devel}
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	/sbin/chkconfig
@@ -76,7 +77,11 @@ wywołania RPC na serwerze na tej maszynie.
 	--enable-warmstarts \
 	--with-statedir=/var/lib/rpcbind \
 	--with-rpcuser=rpc \
+%if %{with systemd}
 	--with-systemdsystemunitdir=%{systemdunitdir}
+%else
+	--without-systemdsystemunitdir
+%endif
 %{__make}
 
 %install
@@ -139,5 +144,8 @@ fi
 %{_mandir}/man8/rpcbind.8*
 %{_mandir}/man8/rpcinfo.8*
 %dir %attr(700,rpc,root) %{_var}/lib/%{name}
+%if %{with systemd}
 %{systemdunitdir}/rpcbind.service
 %{systemdunitdir}/rpcbind.socket
+%endif
+
