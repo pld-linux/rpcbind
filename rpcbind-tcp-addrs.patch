@@ -1,7 +1,6 @@
-diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
---- rpcbind-0.2.3.orig/src/rpcbind.c	2015-04-27 16:07:43.000000000 +0200
-+++ rpcbind-0.2.3/src/rpcbind.c	2016-09-04 11:30:23.340410259 +0200
-@@ -340,7 +340,7 @@
+--- rpcbind-1.2.7/src/rpcbind.c.orig	2024-10-05 21:02:24.365984122 +0200
++++ rpcbind-1.2.7/src/rpcbind.c	2024-10-05 21:07:07.604449687 +0200
+@@ -341,7 +341,7 @@ init_transport(struct netconfig *nconf)
  	int status;	/* bound checking ? */
  	int aicode;
  	int addrlen = 0;
@@ -10,7 +9,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  	int checkbind;
  	int on = 1;
  	struct sockaddr *sa = NULL;
-@@ -456,8 +456,6 @@
+@@ -458,8 +458,6 @@ init_transport(struct netconfig *nconf)
  		hints.ai_family = si.si_af;
  		hints.ai_socktype = si.si_socktype;
  		hints.ai_protocol = si.si_proto;
@@ -19,7 +18,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  		/*
  		 * If no hosts were specified, just bind to INADDR_ANY.  Otherwise
  		 * make sure 127.0.0.1 is added to the list.
-@@ -475,21 +473,15 @@
+@@ -477,21 +475,15 @@ init_transport(struct netconfig *nconf)
  			} else
  				return 1;
  		}
@@ -50,7 +49,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  
  			hints.ai_flags &= ~AI_NUMERICHOST;
  			switch (hints.ai_family) {
-@@ -518,7 +510,7 @@
+@@ -520,7 +512,7 @@ init_transport(struct netconfig *nconf)
  					    host_addr) == 1)
  						continue;
  				}
@@ -59,7 +58,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  			default:
  				break;
  			}
-@@ -541,103 +533,37 @@
+@@ -543,105 +535,41 @@ init_transport(struct netconfig *nconf)
  			}
  			addrlen = res->ai_addrlen;
  			sa = (struct sockaddr *)res->ai_addr;
@@ -68,8 +67,10 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
 -				syslog(LOG_ERR, "cannot bind %s on %s: %m",
 -					(hosts[nhostsbak] == NULL) ? "*" :
 -					hosts[nhostsbak], nconf->nc_netid);
--				if (res != NULL)
+-				if (res != NULL) {
 -					freeaddrinfo(res);
+-					res = NULL;
+-				}
 -				continue;
 -			} else
 -				checkbind++;
@@ -164,27 +165,32 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
 +					sizeof(on)) != 0) {
 +				syslog(LOG_ERR, "cannot set SO_REUSEADDR on %s",
 +					nconf->nc_netid);
-+				if (res != NULL)
++				if (res != NULL) {
 +					freeaddrinfo(res);
++					res = NULL;
++				}
 +				continue;
 +			}
  		}
  		if (bind(fd, sa, addrlen) < 0) {
 -			syslog(LOG_ERR, "cannot bind %s: %m", nconf->nc_netid);
+-			if (res != NULL)
 +			syslog(LOG_ERR, "cannot bind %s on %s: %m",
 +				(hosts && hosts[nhostsbak]) ? hosts[nhostsbak] : "*",
 +				nconf->nc_netid);
- 			if (res != NULL)
++			if (res != NULL) {
  				freeaddrinfo(res);
 -			return 1;
 -		}
++				res = NULL;
++			}
 +			continue;
 +		} else
 +			checkbind++;
  		(void) umask(oldmask);
  
  		/* Copy the address */
-@@ -656,7 +582,7 @@
+@@ -660,7 +586,7 @@ init_transport(struct netconfig *nconf)
  			/* for debugging print out our universal address */
  			char *uaddr;
  			struct netbuf nb;
@@ -193,7 +199,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  
  			nb.buf = sa;
  			switch( sa->sa_family){
-@@ -675,7 +601,8 @@
+@@ -679,7 +605,8 @@ init_transport(struct netconfig *nconf)
  		}
  #endif
  
@@ -203,7 +209,7 @@ diff -ur rpcbind-0.2.3.orig/src/rpcbind.c rpcbind-0.2.3/src/rpcbind.c
  
  		my_xprt = (SVCXPRT *)svc_tli_create(fd, nconf, &taddr, RPC_MAXDATASIZE, RPC_MAXDATASIZE);
  		if (my_xprt == (SVCXPRT *)NULL) {
-@@ -740,6 +667,8 @@
+@@ -744,6 +671,8 @@ got_socket:
  		/* Also add version 2 stuff to rpcbind list */
  		rbllist_add(PMAPPROG, PMAPVERS, nconf, &taddr.addr);
  	}

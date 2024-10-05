@@ -1,6 +1,6 @@
---- rpcbind-1.2.5/systemd/rpcbind.service.in.orig	2018-08-26 11:29:00.657170237 +0200
-+++ rpcbind-1.2.5/systemd/rpcbind.service.in	2018-08-26 21:41:05.066750909 +0200
-@@ -8,11 +8,13 @@
+--- rpcbind-1.2.7/systemd/rpcbind.service.in.orig	2024-10-05 21:00:04.616741208 +0200
++++ rpcbind-1.2.7/systemd/rpcbind.service.in	2024-10-05 21:00:47.903173372 +0200
+@@ -8,11 +8,13 @@ RequiresMountsFor=@statedir@
  # rpcbind.socket, no matter how this unit is started.
  Requires=rpcbind.socket
  Wants=rpcbind.target
@@ -10,18 +10,19 @@
  Type=notify
 -# distro can provide a drop-in adding EnvironmentFile=-/??? if needed.
 +EnvironmentFile=-/etc/sysconfig/rpcbind
- ExecStart=@_sbindir@/rpcbind $RPCBIND_OPTIONS -w -f
+ ExecStart=@_sbindir@/rpcbind $RPCBIND_OPTIONS @warmstarts_opt@ -f
  
  [Install]
  WantedBy=multi-user.target
 +Also=rpcbind.socket
---- rpcbind-0.2.4/systemd/rpcbind.socket.orig	2016-11-28 21:47:28.000000000 +0100
-+++ rpcbind-0.2.4/systemd/rpcbind.socket	2018-04-11 19:43:27.366604185 +0200
-@@ -5,14 +5,14 @@
+--- rpcbind-1.2.7/systemd/rpcbind.socket.orig	2024-10-05 21:01:05.846409499 +0200
++++ rpcbind-1.2.7/systemd/rpcbind.socket	2024-10-05 21:02:11.329388080 +0200
+@@ -5,15 +5,14 @@ Wants=rpcbind.target
  Before=rpcbind.target
  
  [Socket]
 -ListenStream=/run/rpcbind.sock
+-#ListenStream=@/run/rpcbind.sock
 +ListenStream=/var/run/rpcbind.sock
  
  # RPC netconfig can't handle ipv6/ipv4 dual sockets

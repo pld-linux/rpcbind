@@ -6,12 +6,12 @@
 Summary:	Universal addresses to RPC program number mapper
 Summary(pl.UTF-8):	Demon odwzorowujący adresy uniwersalne na numery programów RPC
 Name:		rpcbind
-Version:	1.2.6
-Release:	2
+Version:	1.2.7
+Release:	1
 License:	BSD
 Group:		Daemons
 Source0:	https://downloads.sourceforge.net/rpcbind/%{name}-%{version}.tar.bz2
-# Source0-md5:	2d84ebbb7d6fb1fc3566d2d4b37f214b
+# Source0-md5:	acd444ed322eb458fbd395ec69c4e083
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-libwrap.patch
