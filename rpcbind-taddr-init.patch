@@ -1,0 +1,12 @@
+init_transport() frees taddr.addr.buf on paths taken before it is set (getsockname()
+failure on a systemd-passed socket); start from NULL
+--- rpcbind-1.3.1/src/rpcbind.c.orig	2026-10-29 01:04:01.429280284 +0100
++++ rpcbind-1.3.1/src/rpcbind.c	2026-10-29 01:04:19.209955068 +0100
+@@ -422,6 +422,7 @@
+ 	mode_t oldmask;
+ 	int n;
+         res = NULL;
++	taddr.addr.buf = NULL;
+ 
+ 	if ((nconf->nc_semantics != NC_TPI_CLTS) &&
+ 		(nconf->nc_semantics != NC_TPI_COTS) &&

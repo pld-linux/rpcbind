@@ -1,6 +1,6 @@
---- rpcbind-1.2.7/src/rpcbind.c.orig	2024-10-05 21:02:24.365984122 +0200
-+++ rpcbind-1.2.7/src/rpcbind.c	2024-10-05 21:07:07.604449687 +0200
-@@ -341,7 +341,7 @@ init_transport(struct netconfig *nconf)
+--- rpcbind-1.3.1/src/rpcbind.c.orig	2026-10-29 01:03:55.147389230 +0100
++++ rpcbind-1.3.1/src/rpcbind.c	2026-10-29 01:04:01.429280284 +0100
+@@ -413,7 +413,7 @@
  	int status;	/* bound checking ? */
  	int aicode;
  	int addrlen = 0;
@@ -9,7 +9,7 @@
  	int checkbind;
  	int on = 1;
  	struct sockaddr *sa = NULL;
-@@ -458,8 +458,6 @@ init_transport(struct netconfig *nconf)
+@@ -530,8 +530,6 @@
  		hints.ai_family = si.si_af;
  		hints.ai_socktype = si.si_socktype;
  		hints.ai_protocol = si.si_proto;
@@ -18,7 +18,7 @@
  		/*
  		 * If no hosts were specified, just bind to INADDR_ANY.  Otherwise
  		 * make sure 127.0.0.1 is added to the list.
-@@ -477,21 +475,15 @@ init_transport(struct netconfig *nconf)
+@@ -551,21 +549,15 @@
  			} else
  				return 1;
  		}
@@ -49,7 +49,7 @@
  
  			hints.ai_flags &= ~AI_NUMERICHOST;
  			switch (hints.ai_family) {
-@@ -520,7 +512,7 @@ init_transport(struct netconfig *nconf)
+@@ -594,7 +586,7 @@
  					    host_addr) == 1)
  						continue;
  				}
@@ -58,7 +58,7 @@
  			default:
  				break;
  			}
-@@ -543,105 +535,41 @@ init_transport(struct netconfig *nconf)
+@@ -617,105 +609,41 @@
  			}
  			addrlen = res->ai_addrlen;
  			sa = (struct sockaddr *)res->ai_addr;
@@ -190,7 +190,7 @@
  		(void) umask(oldmask);
  
  		/* Copy the address */
-@@ -660,7 +586,7 @@ init_transport(struct netconfig *nconf)
+@@ -734,7 +662,7 @@
  			/* for debugging print out our universal address */
  			char *uaddr;
  			struct netbuf nb;
@@ -199,7 +199,7 @@
  
  			nb.buf = sa;
  			switch( sa->sa_family){
-@@ -679,7 +605,8 @@ init_transport(struct netconfig *nconf)
+@@ -753,7 +681,8 @@
  		}
  #endif
  
@@ -209,12 +209,12 @@
  
  		my_xprt = (SVCXPRT *)svc_tli_create(fd, nconf, &taddr, RPC_MAXDATASIZE, RPC_MAXDATASIZE);
  		if (my_xprt == (SVCXPRT *)NULL) {
-@@ -744,6 +671,8 @@ got_socket:
- 		/* Also add version 2 stuff to rpcbind list */
- 		rbllist_add(PMAPPROG, PMAPVERS, nconf, &taddr.addr);
+@@ -762,6 +691,8 @@
+ 			goto error;
+ 		}
  	}
 +	if (!checkbind)
 +		return 1;
+ got_socket:
  
- 	/* We need to support portmap over IPv4. It makes sense to
- 	 * support it over AF_LOCAL as well, because that allows
+ #ifdef PORTMAP

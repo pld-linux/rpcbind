@@ -1,29 +1,22 @@
---- rpcbind-1.2.7/systemd/rpcbind.service.in.orig	2024-10-05 21:00:04.616741208 +0200
-+++ rpcbind-1.2.7/systemd/rpcbind.service.in	2024-10-05 21:00:47.903173372 +0200
-@@ -8,11 +8,13 @@ RequiresMountsFor=@statedir@
- # rpcbind.socket, no matter how this unit is started.
+--- rpcbind-1.3.1/systemd/rpcbind.service.in.orig	2026-10-29 01:03:42.760297840 +0100
++++ rpcbind-1.3.1/systemd/rpcbind.service.in	2026-10-29 01:03:47.667525702 +0100
+@@ -9,6 +9,7 @@
  Requires=rpcbind.socket
- Wants=rpcbind.target
+ Wants=rpcbind.target systemd-tmpfiles-setup.service
+ After=systemd-tmpfiles-setup.service
 +After=syslog.target network.target
  
  [Service]
- Type=notify
--# distro can provide a drop-in adding EnvironmentFile=-/??? if needed.
-+EnvironmentFile=-/etc/sysconfig/rpcbind
- ExecStart=@_sbindir@/rpcbind $RPCBIND_OPTIONS @warmstarts_opt@ -f
+ ProtectSystem=full
+@@ -30,3 +31,4 @@
  
  [Install]
  WantedBy=multi-user.target
 +Also=rpcbind.socket
---- rpcbind-1.2.7/systemd/rpcbind.socket.orig	2024-10-05 21:01:05.846409499 +0200
-+++ rpcbind-1.2.7/systemd/rpcbind.socket	2024-10-05 21:02:11.329388080 +0200
-@@ -5,15 +5,14 @@ Wants=rpcbind.target
- Before=rpcbind.target
- 
- [Socket]
--ListenStream=/run/rpcbind.sock
--#ListenStream=@/run/rpcbind.sock
-+ListenStream=/var/run/rpcbind.sock
+--- rpcbind-1.3.1/systemd/rpcbind.socket.in.orig	2026-10-29 01:07:39.299999999 +0100
++++ rpcbind-1.3.1/systemd/rpcbind.socket.in	2026-10-29 01:07:39.304901937 +0100
+@@ -9,11 +9,11 @@
+ @ABSTRACT_TRUE@ListenStream=@/run/rpcbind.sock
  
  # RPC netconfig can't handle ipv6/ipv4 dual sockets
 -BindIPv6Only=ipv6-only
